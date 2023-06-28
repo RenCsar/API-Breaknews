@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const userServices = require("../services/user.service");
-const User = require("../models/User");
+import { Types } from "mongoose";
+import { findByIdService } from "../services/user.service.js";
+import User from "../models/User.js";
 
 const lowerCases = (req, _, next) => {
   req.body.name && (req.body.name = req.body.name.toLowerCase());
@@ -32,7 +32,7 @@ const userExist = async (req, res, next) => {
     return res.status(422).send({ message: "Nome de usuário já cadastrado!" });
   }
 
-  const emailExist = await User.findOne({ email: email });
+  const emailExist = await findOne({ email: email });
 
   if (emailExist) {
     return res.status(422).send({ message: "E-mail já cadastrado!" });
@@ -45,7 +45,7 @@ const validId = (req, res, next) => {
   const id = req.params.id;
 
   //Checar se o id é válido e pertence ao padrão do mongoDB
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!Types.ObjectId.isValid(id)) {
     return res.status(400).send({ message: "Id inválido!" });
   }
 
@@ -55,7 +55,7 @@ const validId = (req, res, next) => {
 const validUser = async (req, res, next) => {
   const id = req.params.id;
 
-  const user = await userServices.findByIdService(id);
+  const user = await findByIdService(id);
 
   if (!user) {
     return res.status(400).send({ message: "Usuário não encontrado!" });
@@ -75,7 +75,7 @@ const validEmail = (req, res, next) => {
   next();
 };
 
-module.exports = {
+export {
   validId,
   validUser,
   checkExtraFields,

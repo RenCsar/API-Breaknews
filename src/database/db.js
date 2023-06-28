@@ -1,4 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import dotenv from 'dotenv';
+import path from 'path';
+
+const envPath = path.join('C:', 'Workspace', 'Sem git', 'API\'S', 'Aula node', 'Api-02', '.env');
+dotenv.config({ path: envPath });
 
 const dbUser = process.env.DB_USER;
 const dbPassWord = process.env.DB_PASS;
@@ -19,8 +24,8 @@ const connectDatabase = () => {
       console.log("MongoDB conectado com sucesso!");
     })
     .catch((error) => {
-      console.log(error);
+      console.log('Erro ao conectar com o banco de dados:', error);
     });
 };
 
-module.exports = connectDatabase;
+export default connectDatabase;

@@ -1,16 +1,17 @@
 //Imports
-require("dotenv").config();
-const express = require("express");
+import dotenv from 'dotenv';
+import express, { json } from "express";
+import userRoute from "./src/routes/user.route.js";
+import connectDatabase from "./src/database/db.js";
 const app = express();
-const userRoute = require("./src/routes/user.route");
-const connectDatabase = require("./src/database/db");
 
 //variables
 const PORT = process.env.PORT || 3000;
 
 //config
+dotenv.config();
 connectDatabase(); //Conexão com banco de dados MongoDB
-app.use(express.json()); //Para conseguir receber o json no body da requisição
+app.use(json()); //Para conseguir receber o json no body da requisição
 
 //routes
 app.use("/user", userRoute);

@@ -1,4 +1,4 @@
-const userServices = require("../services/user.service");
+import { createService, findAllService, deleteByIdService, updateService } from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
@@ -12,7 +12,7 @@ const create = async (req, res) => {
     }
 
     //Create user
-    const user = await userServices.createService(req.body);
+    const user = await createService(req.body);
     res.status(201).send({
       msg: "Usuário cadastrado com sucesso!",
       user: {
@@ -32,7 +32,7 @@ const create = async (req, res) => {
 
 const findAll = async (_, res) => {
   try {
-    const users = await userServices.findAllService();
+    const users = await findAllService();
 
     if (users.length === 0) {
       return res.status(400).send({ message: "Nenhum usuário registrado!" });
@@ -56,7 +56,7 @@ const findById = async (req, res) => {
 const deleteById = async (req, res) => {
   try {
     const id = req.id;
-    await userServices.deleteByIdService(id);
+    await deleteByIdService(id);
     res.status(200).send({ message: "Usuário deletado com sucesso!" });
   } catch (error) {
     console.log(error);
@@ -78,7 +78,7 @@ const update = async (req, res) => {
 
     const id = req.id;
 
-    await userServices.updateService(
+    await updateService(
       id,
       name,
       username,
@@ -95,4 +95,4 @@ const update = async (req, res) => {
   }
 };
 
-module.exports = { create, findAll, findById, deleteById, update };
+export { create, findAll, findById, deleteById, update };
