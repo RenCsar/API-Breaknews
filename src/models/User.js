@@ -18,6 +18,7 @@ const UserSchema = Schema({
   password: {
     type: String,
     require: true,
+    select: false, //Não retorna a senha na hora da consulta
   },
   img: {
     type: String,

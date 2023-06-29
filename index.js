@@ -14,8 +14,8 @@ connectDatabase(); //Conexão com banco de dados MongoDB
 app.use(json()); //Para conseguir receber o json no body da requisição
 
 //routes
-app.use("/user", userRoute);
 app.get("/", ( _, res ) => res.send("Bem-vindo ao App!"));
+app.use("/user", userRoute);
 
 //Port
 app.listen(PORT, () => console.log(`Servidor rodando na porta: ${PORT}`));
