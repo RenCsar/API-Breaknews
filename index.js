@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //config
-dotenv.config();
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 connectDatabase(); //Conexão com banco de dados MongoDB
 app.use(json()); //Para conseguir receber o json no body da requisição
 
@@ -17,5 +17,5 @@ app.use(json()); //Para conseguir receber o json no body da requisição
 app.get("/", ( _, res ) => res.send("Bem-vindo ao App!"));
 app.use("/user", userRoute);
 
-//Port
+//Server listening
 app.listen(PORT, () => console.log(`Servidor rodando na porta: ${PORT}`));
