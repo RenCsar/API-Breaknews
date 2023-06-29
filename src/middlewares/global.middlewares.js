@@ -32,7 +32,7 @@ const userExist = async (req, res, next) => {
     return res.status(422).send({ message: "Nome de usuário já cadastrado!" });
   }
 
-  const emailExist = await findOne({ email: email });
+  const emailExist = await User.findOne({ email: email });
 
   if (emailExist) {
     return res.status(422).send({ message: "E-mail já cadastrado!" });
