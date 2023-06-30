@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
 
@@ -8,7 +8,7 @@ const dbPassWord = process.env.DB_PASS;
 const dbName = process.env.DB_DB;
 
 const connectDatabase = () => {
-    console.log("Esperando conexão com o banco de dados...")
+  console.log("Esperando conexão com o banco de dados...");
   mongoose.Promise = global.Promise;
   mongoose
     .connect(
@@ -22,7 +22,7 @@ const connectDatabase = () => {
       console.log("MongoDB conectado com sucesso!");
     })
     .catch((error) => {
-      console.log('Erro ao conectar com o banco de dados:', error);
+      console.log("Erro ao conectar com o banco de dados:", error);
     });
 };
 
