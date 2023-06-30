@@ -1,9 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
-import path from 'path';
 
-const envPath = path.join('C:', 'Workspace', 'Sem git', 'API\'S', 'Aula node', 'Api-02', '.env');
-dotenv.config({ path: envPath });
+dotenv.config();
 
 const dbUser = process.env.DB_USER;
 const dbPassWord = process.env.DB_PASS;
