@@ -10,17 +10,19 @@ const lowerCases = (req, _, next) => {
   next();
 };
 
-const checkExtraFields = (req, res, next) => {
-  const fields = Object.keys(req.body); // Obtenha as chaves dos campos enviados
-  const extraFields = fields.filter((field) => !User.schema.path(field));
+const checkExtraFields = (model) => {
+  return (req, res, next) => {
+    const fields = Object.keys(req.body); // Obtenha as chaves dos campos enviados
+    const extraFields = fields.filter((field) => !model.schema.path(field));
 
-  if (extraFields.length > 0) {
-    return res.status(400).send({
-      message: "Existem campos inválidos no corpo da requisição.",
-      extraFields,
-    });
-  }
-  next();
+    if (extraFields.length > 0) {
+      return res.status(400).send({
+        message: "Existem campos inválidos no corpo da requisição.",
+        extraFields,
+      });
+    }
+    next();
+  };
 };
 
 const userExist = async (req, res, next) => {
