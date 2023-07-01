@@ -1,6 +1,6 @@
 import { createService, findAllService } from "../services/news.service.js";
 
-const create = (req, res) => {
+const create = async (req, res) => {
   try {
     const { title, text, banner } = req.body;
 
@@ -10,15 +10,31 @@ const create = (req, res) => {
       });
     }
 
+    await createService({
+      title,
+      text,
+      banner,
+      user: { _id: "649dea0062f1dc13a271eeb2" },
+    });
+
     res.status(201).send({ messege: "Post criado com sucesso!" });
   } catch (error) {
     res.status(500).send({ messege: error.messege });
   }
 };
 
-const findAll = (req, res) => {
-  const news = [];
-  res.status(200).send({ news });
+const findAll = async (req, res) => {
+  try {
+    const news = await findAllService();
+
+    if (news.length === 0) {
+      return res.status(400).send({ message: "Nenhuma postagem registrada!" });
+    }
+
+    res.status(200).send(news);
+  } catch (error) {
+    return res.status(500).send({ message: error.message });
+  }
 };
 
 export { create, findAll };

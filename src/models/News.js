@@ -15,7 +15,7 @@ const NewsSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    defautl: Date.now(),
+    default: Date.now(),
   },
   user: {
     type: Schema.Types.ObjectId,
