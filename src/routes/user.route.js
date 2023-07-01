@@ -8,6 +8,6 @@ userRoute.post("/", lowerCases, validEmail, checkExtraFields, userExist, create)
 userRoute.get("/", findAll);
 userRoute.get("/:id", validId, validUser, findById);
 userRoute.delete("/:id", validId, validUser, deleteById);
-userRoute.patch("/:id", lowerCases, validEmail, checkExtraFields, userExist, validId, validUser, update)
+userRoute.patch("/:id", lowerCases, validEmail, checkExtraFields, userExist, validId, validUser, update);
 
 export default userRoute;

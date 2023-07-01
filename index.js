@@ -1,11 +1,14 @@
 //Imports
 import dotenv from 'dotenv';
 import express, { json } from "express";
-import userRoute from "./src/routes/user.route.js";
 import connectDatabase from "./src/database/db.js";
-const app = express();
+
+//Routes imports
+import userRoute from "./src/routes/user.route.js";
+import authRoute from './src/routes/auth.route.js';
 
 //variables
+const app = express();
 const PORT = process.env.PORT || 3000;
 
 //config
@@ -16,6 +19,7 @@ app.use(json()); //Para conseguir receber o json no body da requisição
 //routes
 app.get("/", ( _, res ) => res.send("Bem-vindo ao App!"));
 app.use("/user", userRoute);
+app.use("/auth", authRoute);
 
 //Server listening
 app.listen(PORT, () => console.log(`Servidor rodando na porta: ${PORT}`));
