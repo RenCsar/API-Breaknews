@@ -1,7 +1,7 @@
 import { createService, findAllService } from "../services/news.service.js";
 
 const create = async (req, res) => {
-  try {
+  try {    
     const { title, text, banner } = req.body;
 
     if (!title || !text || !banner) {
@@ -14,7 +14,7 @@ const create = async (req, res) => {
       title,
       text,
       banner,
-      user: { _id: "649dea0062f1dc13a271eeb2" },
+      user: req.userId,
     });
 
     res.status(201).send({ messege: "Post criado com sucesso!" });
