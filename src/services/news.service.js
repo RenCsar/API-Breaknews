@@ -5,5 +5,8 @@ const findAllService = (offset, limit) => News.find().sort({_id: -1}).skip(offse
 const countNews = () => News.countDocuments();
 const topNewsService = () => News.findOne().sort({_id: -1}).populate("user");
 const findByidService = (id) => News.findById(id).populate("user");
+const searchByTitleService = (title) => News.find({
+    title: {$regex: `${title || ""}`, $options: "i"} // regex title ou parte desse title; option: "i" para não ser case-sensitive
+}).sort({_id: -1}).populate("user");
 
-export { createService, findAllService, countNews, topNewsService, findByidService };
+export { createService, findAllService, countNews, topNewsService, findByidService, searchByTitleService };

@@ -3,6 +3,7 @@ import {
   findAllService,
   countNews,
   topNewsService,
+  searchByTitleService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -23,8 +24,8 @@ const create = async (req, res) => {
     });
 
     res.status(201).send({ messege: "Post criado com sucesso!" });
-  } catch (error) {
-    res.status(500).send({ messege: error.messege });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -80,12 +81,12 @@ const findAll = async (req, res) => {
         img: item.user.img,
       })),
     });
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
-const topNews = async ( _ , res) => {
+const topNews = async (_, res) => {
   try {
     const news = await topNewsService();
 
@@ -106,8 +107,8 @@ const topNews = async ( _ , res) => {
         img: news.user.img,
       },
     });
-  } catch (error) {
-    res.status(500).send({ messege: error.messege });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -128,9 +129,39 @@ const findById = async (req, res) => {
         img: news.user.img,
       },
     });
-  } catch (error) {
-    res.status(500).send({ messege: error.messege });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
-export { create, findAll, topNews, findById };
+const searchByTitle = async (req, res) => {
+  try {
+    const { title } = req.query;
+
+    const news = await searchByTitleService(title);
+
+    if (news.length === 0) {
+      return res
+        .status(400)
+        .send({ messege: "Não existe nenhuma notícia com esse título!" });
+    }
+
+    return res.status(200).send({
+      results: news.map((item) => ({
+        id: item._id,
+        title: item.title,
+        text: item.text,
+        banner: item.banner,
+        likes: item.likes,
+        comments: item.comments,
+        name: item.user.name,
+        userName: item.user.username,
+        img: item.user.img,
+      })),
+    });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+export { create, findAll, topNews, findById, searchByTitle };
