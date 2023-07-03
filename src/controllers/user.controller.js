@@ -1,4 +1,9 @@
-import { createService, findAllService, deleteByIdService, updateService } from "../services/user.service.js";
+import {
+  createService,
+  findAllService,
+  deleteByIdService,
+  updateService,
+} from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
@@ -24,9 +29,8 @@ const create = async (req, res) => {
         background,
       },
     });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -39,8 +43,8 @@ const findAll = async (_, res) => {
     }
 
     res.send(users);
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -48,8 +52,8 @@ const findById = async (req, res) => {
   try {
     const user = req.user;
     res.status(200).send(user);
-  } catch (error) {
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -58,9 +62,8 @@ const deleteById = async (req, res) => {
     const id = req.id;
     await deleteByIdService(id);
     res.status(200).send({ message: "Usuário deletado com sucesso!" });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 
@@ -78,20 +81,11 @@ const update = async (req, res) => {
 
     const id = req.id;
 
-    await updateService(
-      id,
-      name,
-      username,
-      email,
-      password,
-      img,
-      background
-    );
+    await updateService(id, name, username, email, password, img, background);
 
     res.status(201).send({ message: "Usuário atualizado com sucesso!" });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: error.message });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
   }
 };
 

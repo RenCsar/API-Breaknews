@@ -23,9 +23,8 @@ const login = async (req, res) => {
       .status(200)
       .header("Authorization", "Bearer" + token)
       .send({ message: "Login realizado com sucesso!", token: token });
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
+  } catch (err) {
+    res.status(500).send({ message: err.message });  }
 };
 
 export { login };
