@@ -3,7 +3,6 @@ import {
   findAllService,
   countNews,
   topNewsService,
-  findByidService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -86,7 +85,7 @@ const findAll = async (req, res) => {
   }
 };
 
-const topNews = async (req, res) => {
+const topNews = async ( _ , res) => {
   try {
     const news = await topNewsService();
 
@@ -114,10 +113,7 @@ const topNews = async (req, res) => {
 
 const findById = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    console.log(id)
-    const news = await findByidService(id);
+    const news = req.news;
 
     return res.status(200).send({
       news: {

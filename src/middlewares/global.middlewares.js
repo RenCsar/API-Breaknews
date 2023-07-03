@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import { findByIdService } from "../services/user.service.js";
+import { findByidService as findNewsbyIdService } from "../services/news.service.js";
 import User from "../models/User.js";
 
 const lowerCases = (req, _, next) => {
@@ -69,6 +70,21 @@ const validUser = async (req, res, next) => {
   next();
 };
 
+const validNews = async (req, res, next) => {
+  const id = req.params.id;
+
+  const news = await findNewsbyIdService(id);
+
+  if (!news) {
+    return res.status(400).send({ message: "Notícia não encontrada!" });
+  }
+
+  req.id = id;
+  req.news = news;
+
+  next();
+};
+
 const validEmail = (req, res, next) => {
   const email = req.body.email;
   if (email && !email.includes("@")) {
@@ -84,4 +100,5 @@ export {
   lowerCases,
   validEmail,
   userExist,
+  validNews,
 };
