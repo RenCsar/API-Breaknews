@@ -1,12 +1,18 @@
 import News from "../models/News.js";
 
-const createService = (body) => News.create(body);
-const findAllService = (offset, limit) => News.find().sort({_id: -1}).skip(offset).limit(limit).populate("user");
-const countNews = () => News.countDocuments();
-const topNewsService = () => News.findOne().sort({_id: -1}).populate("user");
-const findByidService = (id) => News.findById(id).populate("user");
-const searchByTitleService = (title) => News.find({
-    title: {$regex: `${title || ""}`, $options: "i"} // regex title ou parte desse title; option: "i" para não ser case-sensitive
-}).sort({_id: -1}).populate("user");
+export const createService = (body) => News.create(body);
+export const findAllService = (offset, limit) =>
+  News.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
 
-export { createService, findAllService, countNews, topNewsService, findByidService, searchByTitleService };
+export const countNews = () => News.countDocuments();
+export const topNewsService = () => News.findOne().sort({ _id: -1 }).populate("user");
+export const findByidService = (id) => News.findById(id).populate("user");
+export const searchByTitleService = (title) =>
+  News.find({
+    title: { $regex: `${title || ""}`, $options: "i" }, // regex title ou parte desse title; option: "i" para não ser case-sensitive
+  })
+    .sort({ _id: -1 })
+    .populate("user");
+
+export const byUserService = (id) =>
+  News.find({ user: id }).sort({ _id: -1 }).populate("user");
