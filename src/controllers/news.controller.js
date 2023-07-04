@@ -5,6 +5,8 @@ import {
   topNewsService,
   searchByTitleService,
   byUserService,
+  updateService,
+  findByIdService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -188,4 +190,42 @@ const byUser = async (req, res) => {
   }
 };
 
-export { create, findAll, topNews, findById, searchByTitle, byUser };
+const update = async (req, res) => {
+  try {
+    const { title, text, banner } = req.body;
+    const { id } = req.params;
+
+    if (!title && !text && !banner) {
+      return res.status(400).send({
+        message: "Por favor, preencha pelo menos um requisito do formulário!",
+      });
+    }
+
+    const news = await findByIdService(id);
+
+    if (!news) {
+      return res
+        .status(400)
+        .send({ messege: "Não nenhuma postagem encontrada!" });
+    }
+
+    //Verificar se quem está editando é o dono da postagem
+    if (String(news.user._id) != String(req.userId)) {
+      return res
+        .status(401)
+        .send({ messege: "Você não pode atualizar essa postagem!" });
+    }
+
+    await updateService(id, title, text, banner);
+
+    return res
+      .status(200)
+      .send({ messege: "Postagem atualizada com sucesso!" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+//Modificar o update do user
+
+export { create, findAll, topNews, findById, searchByTitle, byUser, update };

@@ -6,6 +6,7 @@ import {
   topNews,
   searchByTitle,
   byUser,
+  update
 } from "./../controllers/news.controller.js";
 import {
   checkExtraFields,
@@ -24,7 +25,7 @@ newsRoute.get("/", findAll);
 newsRoute.get("/top", topNews);
 newsRoute.get("/search", searchByTitle);
 newsRoute.get("/byUser", authMiddleware, byUser);
-
 newsRoute.get("/:id", authMiddleware, validId, validNews, findById);
+newsRoute.patch("/:id", authMiddleware, update);
 
 export default newsRoute;

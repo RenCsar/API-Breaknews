@@ -5,8 +5,9 @@ export const findAllService = (offset, limit) =>
   News.find().sort({ _id: -1 }).skip(offset).limit(limit).populate("user");
 
 export const countNews = () => News.countDocuments();
-export const topNewsService = () => News.findOne().sort({ _id: -1 }).populate("user");
-export const findByidService = (id) => News.findById(id).populate("user");
+export const topNewsService = () =>
+  News.findOne().sort({ _id: -1 }).populate("user");
+export const findByIdService = (id) => News.findById(id).populate("user");
 export const searchByTitleService = (title) =>
   News.find({
     title: { $regex: `${title || ""}`, $options: "i" }, // regex title ou parte desse title; option: "i" para não ser case-sensitive
@@ -16,3 +17,10 @@ export const searchByTitleService = (title) =>
 
 export const byUserService = (id) =>
   News.find({ user: id }).sort({ _id: -1 }).populate("user");
+
+export const updateService = (id, title, text, banner) =>
+  News.findOneAndUpdate(
+    { _id: id },
+    { title, text, banner },
+    { rawResult: true }
+  );

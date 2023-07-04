@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 import { findByIdService } from "../services/user.service.js";
-import { findByidService as findNewsbyIdService } from "../services/news.service.js";
+import { findByIdService as findNewsbyIdService } from "../services/news.service.js";
 import User from "../models/User.js";
 
 const lowerCases = (req, _, next) => {
