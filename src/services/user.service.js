@@ -7,7 +7,8 @@ const deleteByIdService = (id) => User.findByIdAndDelete(id);
 const updateService = (id, name, username, email, password, img, background) =>
   User.findOneAndUpdate(
     { _id: id },
-    { name, username, email, password, img, background }
+    { name, username, email, password, img, background },
+    { rawResult: true }
   );
 
 export {

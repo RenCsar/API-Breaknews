@@ -226,6 +226,4 @@ const update = async (req, res) => {
   }
 };
 
-//Modificar o update do user
-
 export { create, findAll, topNews, findById, searchByTitle, byUser, update };
