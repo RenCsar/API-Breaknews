@@ -7,6 +7,7 @@ import {
   byUserService,
   updateService,
   findByIdService,
+  deleteByIdService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -226,4 +227,40 @@ const update = async (req, res) => {
   }
 };
 
-export { create, findAll, topNews, findById, searchByTitle, byUser, update };
+const deleteById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const news = await findByIdService(id);
+
+    if (!news) {
+      return res
+        .status(400)
+        .send({ messege: "Não nenhuma postagem encontrada!" });
+    }
+
+    //Verificar se quem está editando é o dono da postagem
+    if (String(news.user._id) != String(req.userId)) {
+      return res
+        .status(401)
+        .send({ messege: "Você não pode deletar essa postagem!" });
+    }
+
+    await deleteByIdService(id);
+
+    return res.status(200).send({ messege: "Notícia deletada com sucesso!" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+export {
+  create,
+  findAll,
+  topNews,
+  findById,
+  searchByTitle,
+  byUser,
+  update,
+  deleteById,
+};

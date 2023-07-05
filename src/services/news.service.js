@@ -24,3 +24,5 @@ export const updateService = (id, title, text, banner) =>
     { title, text, banner },
     { rawResult: true }
   );
+
+export const deleteByIdService = (id) => News.findOneAndDelete({_id: id});

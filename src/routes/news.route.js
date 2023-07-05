@@ -6,7 +6,8 @@ import {
   topNews,
   searchByTitle,
   byUser,
-  update
+  update,
+  deleteById
 } from "./../controllers/news.controller.js";
 import {
   checkExtraFields,
@@ -27,5 +28,6 @@ newsRoute.get("/search", searchByTitle);
 newsRoute.get("/byUser", authMiddleware, byUser);
 newsRoute.get("/:id", authMiddleware, validId, validNews, findById);
 newsRoute.patch("/:id", authMiddleware, update);
+newsRoute.delete("/:id", authMiddleware, deleteById);
 
 export default newsRoute;
