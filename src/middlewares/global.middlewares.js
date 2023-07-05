@@ -93,6 +93,25 @@ const validEmail = (req, res, next) => {
   next();
 };
 
+const checkOwnerPost = async (req, res, next) => {
+  const { id } = req.params;
+
+  const news = await findNewsbyIdService(id);
+
+  if (!news) {
+    return res.status(400).send({ messege: "Nenhuma Notícia encontrada!" });
+  }
+
+  //Verificar se quem está editando é o dono da postagem
+  if (String(news.user._id) != String(req.userId)) {
+    return res
+      .status(401)
+      .send({ messege: "Você não pode deletar essa postagem!" });
+  }
+  req.postId = id;
+  next();
+};
+
 export {
   validId,
   validUser,
@@ -101,4 +120,5 @@ export {
   validEmail,
   userExist,
   validNews,
+  checkOwnerPost,
 };

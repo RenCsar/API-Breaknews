@@ -194,27 +194,12 @@ const byUser = async (req, res) => {
 const update = async (req, res) => {
   try {
     const { title, text, banner } = req.body;
-    const { id } = req.params;
+    const id = req.postId;
 
     if (!title && !text && !banner) {
       return res.status(400).send({
         message: "Por favor, preencha pelo menos um requisito do formulário!",
       });
-    }
-
-    const news = await findByIdService(id);
-
-    if (!news) {
-      return res
-        .status(400)
-        .send({ messege: "Não nenhuma postagem encontrada!" });
-    }
-
-    //Verificar se quem está editando é o dono da postagem
-    if (String(news.user._id) != String(req.userId)) {
-      return res
-        .status(401)
-        .send({ messege: "Você não pode atualizar essa postagem!" });
     }
 
     await updateService(id, title, text, banner);
@@ -229,22 +214,7 @@ const update = async (req, res) => {
 
 const deleteById = async (req, res) => {
   try {
-    const { id } = req.params;
-
-    const news = await findByIdService(id);
-
-    if (!news) {
-      return res
-        .status(400)
-        .send({ messege: "Não nenhuma postagem encontrada!" });
-    }
-
-    //Verificar se quem está editando é o dono da postagem
-    if (String(news.user._id) != String(req.userId)) {
-      return res
-        .status(401)
-        .send({ messege: "Você não pode deletar essa postagem!" });
-    }
+    const id = req.postId;
 
     await deleteByIdService(id);
 

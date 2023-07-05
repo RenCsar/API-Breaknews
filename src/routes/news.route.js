@@ -13,6 +13,7 @@ import {
   checkExtraFields,
   validId,
   validNews,
+  checkOwnerPost
 } from "../middlewares/global.middlewares.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import News from "../models/News.js";
@@ -27,7 +28,7 @@ newsRoute.get("/top", topNews);
 newsRoute.get("/search", searchByTitle);
 newsRoute.get("/byUser", authMiddleware, byUser);
 newsRoute.get("/:id", authMiddleware, validId, validNews, findById);
-newsRoute.patch("/:id", authMiddleware, update);
-newsRoute.delete("/:id", authMiddleware, deleteById);
+newsRoute.patch("/:id", authMiddleware, checkOwnerPost, update);
+newsRoute.delete("/:id", authMiddleware, checkOwnerPost, deleteById);
 
 export default newsRoute;
