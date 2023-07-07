@@ -30,7 +30,7 @@ export const deleteByIdService = (id) => News.findOneAndDelete({ _id: id });
 export const likeNewsService = (idNews, userId, userName) =>
   News.findOneAndUpdate(
     { _id: idNews, "likes.userId": { $nin: [userId] } },
-    { $push: { likes: { userId, userName, created: new Date() } } },
+    { $push: { likes: { userId, userName, createdAt: new Date() } } },
     { new: true }
   );
 
@@ -38,5 +38,32 @@ export const deleteLikeNewsService = (idNews, userId) =>
   News.findOneAndUpdate(
     { _id: idNews },
     { $pull: { likes: { userId } } },
+    { new: true }
+  );
+
+export const addCommentService = (idNews, comment, userId, userName) => {
+  const idComment = Math.floor(Date.now() * Math.random()).toString(36);
+
+  return News.findOneAndUpdate(
+    { _id: idNews },
+    {
+      $push: {
+        comments: {
+          idComment,
+          userId,
+          userName,
+          comment,
+          createdAt: new Date(),
+        },
+      },
+    },
+    { new: true }
+  );
+};
+
+export const removeCommentService = (idNews, idComment, userId) =>
+  News.findOneAndUpdate(
+    { _id: idNews },
+    { $pull: { comments: { idComment, userId } } },
     { new: true }
   );

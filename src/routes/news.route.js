@@ -8,13 +8,15 @@ import {
   byUser,
   update,
   deleteById,
-  likeNews
+  likeNews,
+  addComment,
+  removeComment,
 } from "./../controllers/news.controller.js";
 import {
   checkExtraFields,
   validId,
   validNews,
-  checkOwnerPost
+  checkOwnerPost,
 } from "../middlewares/global.middlewares.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import News from "../models/News.js";
@@ -32,5 +34,7 @@ newsRoute.get("/:id", authMiddleware, validId, validNews, findById);
 newsRoute.patch("/:id", authMiddleware, checkOwnerPost, update);
 newsRoute.delete("/:id", authMiddleware, checkOwnerPost, deleteById);
 newsRoute.patch("/like/:id", authMiddleware, likeNews);
+newsRoute.patch("/comment/:id", authMiddleware, addComment);
+newsRoute.patch("/comment/:idNews/:idComment", authMiddleware, removeComment);
 
 export default newsRoute;
