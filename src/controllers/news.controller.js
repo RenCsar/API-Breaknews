@@ -6,8 +6,9 @@ import {
   searchByTitleService,
   byUserService,
   updateService,
-  findByIdService,
   deleteByIdService,
+  likeNewsService,
+  deleteLikeNewsService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -224,6 +225,25 @@ const deleteById = async (req, res) => {
   }
 };
 
+const likeNews = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId;
+  const userName = req.userName;
+
+  try {
+    const newsLiked = await likeNewsService(id, userId, userName);
+
+    if (!newsLiked) {
+      await deleteLikeNewsService(id, userId);
+      return res.status(200).send({ messege: "Like removido com sucesso!" });
+    }
+
+    res.status(200).send({ messege: "Like adicionado com sucesso!" });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 export {
   create,
   findAll,
@@ -233,4 +253,5 @@ export {
   byUser,
   update,
   deleteById,
+  likeNews,
 };
