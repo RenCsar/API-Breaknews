@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 import express, { json } from "express";
 import connectDatabase from "./src/database/db.js";
+import cors from "cors"
 
 //Routes imports
 import authRoute from './src/routes/auth.route.js';
@@ -16,6 +17,7 @@ const PORT = process.env.PORT || 3000;
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 connectDatabase(); //Conexão com banco de dados MongoDB
 app.use(json()); //Para conseguir receber o json no body da requisição
+app.use(cors());
 
 //routes
 app.get("/", ( _, res ) => res.send("Bem-vindo ao App!"));
