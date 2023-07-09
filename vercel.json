@@ -8,7 +8,19 @@
   ],
   "routes": [
     {
-      "src": "(.*)",
+      "src": "/auth/(.*)",
+      "dest": "/auth/$1"
+    },
+    {
+      "src": "/user/(.*)",
+      "dest": "/user/$1"
+    },
+    {
+      "src": "/news/(.*)",
+      "dest": "/news/$1"
+    },
+    {
+      "src": ".*",
       "dest": "./index.js"
     }
   ]
