@@ -3,18 +3,12 @@ import {
   findAllService,
   deleteByIdService,
   updateService,
+  findByIdService,
 } from "../services/user.service.js";
 
 const create = async (req, res) => {
   try {
-    const { name, username, email, password, img, background } = req.body;
-
-    //Validations
-    if (!name || !username || !email || !password || !img || !background) {
-      return res.status(400).send({
-        message: "Por favor, preencha todos os requisitos do formulário!",
-      });
-    }
+    const { name, username, email, img, background } = req.body;
 
     //Create user
     const user = await createService(req.body);
@@ -37,11 +31,6 @@ const create = async (req, res) => {
 const findAll = async (_, res) => {
   try {
     const users = await findAllService();
-
-    if (users.length === 0) {
-      return res.status(400).send({ message: "Nenhum usuário registrado!" });
-    }
-
     res.send(users);
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -50,7 +39,7 @@ const findAll = async (_, res) => {
 
 const findById = async (req, res) => {
   try {
-    const user = req.user;
+    const user = await findByIdService(req.user);
     res.status(200).send(user);
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -69,19 +58,9 @@ const deleteById = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { name, username, email, password, img, background } = req.body;
+    req.body.id = req.id;
 
-    //Validations
-    if (!name && !username && !email && !password && !img && !background) {
-      return res.status(400).send({
-        message:
-          "Por favor, preencha pelo menos um dos requisitos do formulário!",
-      });
-    }
-
-    const id = req.id;
-
-    await updateService(id, name, username, email, password, img, background);
+    await updateService(req.body);
 
     res.status(201).send({ message: "Usuário atualizado com sucesso!" });
   } catch (err) {
