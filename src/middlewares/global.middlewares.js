@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import { findByIdService } from "../services/user.service.js";
-import { findByIdService as findNewsbyIdService } from "../services/news.service.js";
+import { findByIdRepository } from "../repositories/user.repositories.js";
+import { findByIdRepository as findNewsbyIdRepository } from "../repositories/news.repositories.js";
 import User from "../models/User.js";
 
 const lowerCases = (req, _, next) => {
@@ -73,7 +73,7 @@ const validUser = async (req, res, next) => {
 const validNews = async (req, res, next) => {
   const id = req.params.id;
 
-  const news = await findNewsbyIdService(id);
+  const news = await findNewsbyIdRepository(id);
 
   if (!news) {
     return res.status(400).send({ message: "Notícia não encontrada!" });
