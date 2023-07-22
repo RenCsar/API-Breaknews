@@ -1,11 +1,25 @@
-import jwt from "jsonwebtoken";
-import User from "../models/User.js";
-import dotenv from "dotenv";
+import bcrypt from "bcrypt";
+import {
+  generateToken,
+  loginRepository,
+} from "../repositories/auth.repositories.js";
 
-dotenv.config();
-const secret = process.env.SECRET;
+const loginService = async ({ email, password }) => {
+  try {
+    const user = await loginRepository(email);
 
-const loginService = (email) => User.findOne({ email: email }).select("+password");
-const generateToken = (id) => jwt.sign({ id: id }, secret, { expiresIn: 86400 });
+    if (!user) throw new Error("Usuário ou senha inválidos!");
 
-export { loginService, generateToken };
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+
+    if (!passwordIsValid) throw new Error("Usuário ou senha inválidos!");
+
+    const token = generateToken(user.id);
+
+    return token;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+export { loginService };
