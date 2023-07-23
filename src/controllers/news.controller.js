@@ -85,7 +85,9 @@ const update = async (req, res) => {
   try {
     const body = {
       title: req.body.title,
+      subtitle: req.body.subtitle,
       text: req.body.text,
+      category: req.body.category,
       banner: req.body.banner,
       postId: req.postId,
     };

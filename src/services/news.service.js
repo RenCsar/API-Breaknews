@@ -16,14 +16,16 @@ import {
 
 export const createService = async (body) => {
   try {
-    const { title, text, banner, userId } = body;
+    const { title, text, banner, userId, subtitle, category } = body;
 
-    if (!title || !text || !banner)
+    if (!title || !text || !banner || !subtitle || !category)
       throw new Error("Por favor, preencha todos os requisitos do formulário!");
 
     return await createRepository({
       title,
+      subtitle,
       text,
+      category,
       banner,
       user: userId,
     });
@@ -73,7 +75,9 @@ export const findAllService = async (body) => {
       results: news.map((item) => ({
         id: item._id,
         title: item.title,
+        subtitle: item.subtitle,
         text: item.text,
+        category: item.category,
         banner: item.banner,
         likes: item.likes,
         comments: item.comments,
@@ -97,7 +101,9 @@ export const topNewsService = async () => {
       news: {
         id: news._id,
         title: news.title,
+        subtitle: news.subtitle,
         text: news.text,
+        category: news.category,
         banner: news.banner,
         likes: news.likes,
         comments: news.comments,
@@ -119,7 +125,9 @@ export const findByIdService = async (body) => {
       news: {
         id: news._id,
         title: news.title,
+        subtitle: news.subtitle,
         text: news.text,
+        category: news.category,
         banner: news.banner,
         likes: news.likes,
         comments: news.comments,
@@ -144,7 +152,9 @@ export const searchByTitleService = async (title) => {
       results: news.map((item) => ({
         id: item._id,
         title: item.title,
+        subtitle: item.subtitle,
         text: item.text,
+        category: item.category,
         banner: item.banner,
         likes: item.likes,
         comments: item.comments,
@@ -166,7 +176,9 @@ export const byUserService = async (id) => {
       results: news.map((item) => ({
         id: item._id,
         title: item.title,
+        subtitle: item.subtitle,
         text: item.text,
+        category: item.category,
         banner: item.banner,
         likes: item.likes,
         comments: item.comments,
@@ -182,9 +194,9 @@ export const byUserService = async (id) => {
 
 export const updateService = async (body) => {
   try {
-    const { title, text, banner } = body;
+    const { title, subtitle, text, category, banner } = body;
 
-    if (!title && !text && !banner)
+    if (!title && !subtitle && !text && !category && !banner)
       throw new Error(
         "Por favor, preencha pelo menos um requisito do formulário!"
       );

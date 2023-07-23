@@ -5,6 +5,10 @@ const NewsSchema = new Schema({
     type: String,
     require: true,
   },
+  subtitle: {
+    type: String,
+    require: true,
+  },
   text: {
     type: String,
     require: true,
@@ -16,6 +20,10 @@ const NewsSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+  },
+  category: {
+    type: Array,
+    require: true,
   },
   user: {
     type: Schema.Types.ObjectId,

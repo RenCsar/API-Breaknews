@@ -18,10 +18,17 @@ export const searchByTitleRepository = (title) =>
 export const byUserRepository = (id) =>
   News.find({ user: id }).sort({ _id: -1 }).populate("user");
 
-export const updateRepository = ({ postId, title, text, banner }) =>
+export const updateRepository = ({
+  postId,
+  title,
+  subtitle,
+  text,
+  category,
+  banner,
+}) =>
   News.findOneAndUpdate(
     { _id: postId },
-    { title, text, banner },
+    { title, subtitle, text, category, banner },
     { rawResult: true }
   );
 
