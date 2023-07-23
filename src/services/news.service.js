@@ -11,6 +11,7 @@ import {
   deleteLikeNewsRepository,
   addCommentRepository,
   removeCommentRepository,
+  findCommentRepository,
 } from "../repositories/news.repositories.js";
 
 export const createService = async (body) => {
@@ -132,19 +133,14 @@ export const findByIdService = async (body) => {
   }
 };
 
-export const searchByTitleService = async (req, res) => {
+export const searchByTitleService = async (title) => {
   try {
-    const { title } = req.query;
-
     const news = await searchByTitleRepository(title);
 
-    if (news.length === 0) {
-      return res
-        .status(400)
-        .send({ messege: "Não existe nenhuma notícia com esse título!" });
-    }
+    if (news.length === 0)
+      throw new Error("Não existe nenhuma notícia com esse título!");
 
-    return res.status(200).send({
+    return {
       results: news.map((item) => ({
         id: item._id,
         title: item.title,
@@ -156,18 +152,17 @@ export const searchByTitleService = async (req, res) => {
         userName: item.user.username,
         img: item.user.img,
       })),
-    });
+    };
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const byUserService = async (req, res) => {
+export const byUserService = async (id) => {
   try {
-    const id = req.userId;
     const news = await byUserRepository(id);
 
-    return res.status(200).send({
+    return {
       results: news.map((item) => ({
         id: item._id,
         title: item.title,
@@ -179,108 +174,77 @@ export const byUserService = async (req, res) => {
         userName: item.user.username,
         img: item.user.img,
       })),
-    });
+    };
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const updateService = async (req, res) => {
+export const updateService = async (body) => {
   try {
-    const { title, text, banner } = req.body;
-    const id = req.postId;
+    const { title, text, banner } = body;
 
-    if (!title && !text && !banner) {
-      return res.status(400).send({
-        message: "Por favor, preencha pelo menos um requisito do formulário!",
-      });
-    }
+    if (!title && !text && !banner)
+      throw new Error(
+        "Por favor, preencha pelo menos um requisito do formulário!"
+      );
 
-    await updateRepository(id, title, text, banner);
-
-    return res
-      .status(200)
-      .send({ messege: "Postagem atualizada com sucesso!" });
+    return await updateRepository(body);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const deleteByIdService = async (req, res) => {
+export const deleteByIdService = async (id) => {
   try {
-    const id = req.postId;
-
-    await deleteByIdRepository(id);
-
-    return res.status(200).send({ messege: "Notícia deletada com sucesso!" });
+    return await deleteByIdRepository(id);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const likeNewsService = async (req, res) => {
-  const { id } = req.params;
-  const userId = req.userId;
-  const userName = req.userName;
-
+export const likeNewsService = async ({ idNews, userId, userName }) => {
   try {
-    const newsLiked = await likeNewsRepository(id, userId, userName);
+    const newsLiked = await likeNewsRepository(idNews, userId, userName);
 
     if (!newsLiked) {
-      await deleteLikeNewsRepository(id, userId);
-      return res.status(200).send({ messege: "Like removido com sucesso!" });
+      await deleteLikeNewsRepository(idNews, userId);
+      throw new Error("Like removido com sucesso!");
     }
 
-    res.status(200).send({ messege: "Like adicionado com sucesso!" });
+    return newsLiked;
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const addCommentService = async (req, res) => {
+export const addCommentService = async (id, comment, userId, userName) => {
   try {
-    const { id } = req.params;
-    const { userId, userName } = req;
-    const { comment } = req.body;
+    if (!comment) throw new Error("Escreva um comentário!");
 
-    if (!comment) {
-      return res.status(400).send({ messege: "Escreva um comentário!" });
-    }
-
-    await addCommentRepository(id, comment, userId, userName);
-    res.status(200).send("Comentário adicionado com sucesso!");
+    return await addCommentRepository(id, comment, userId, userName);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };
 
-export const removeCommentService = async (req, res) => {
+export const removeCommentService = async (idNews, idComment, userId) => {
   try {
-    const { idNews, idComment } = req.params;
-    const userId = req.userId;
+    const findPost = await findCommentRepository(idNews, idComment, userId);
 
-    const commentDeleted = await removeCommentRepository(
-      idNews,
-      idComment,
-      userId
-    );
+    if (!findPost) throw new Error("Notícia não encontrada!");
 
-    const commentFinder = commentDeleted.comments.find(
+    const findComment = findPost.comments.find(
       (comment) => comment.idComment === idComment
     );
 
-    if (!commentFinder) {
-      return res.status(400).send({ messege: "Comentário não existe!" });
-    }
+    if (!findComment) throw new Error("Comentário não encontrado!");
 
-    if (commentFinder.userId !== userId) {
-      return res
-        .status(400)
-        .send({ messege: "Você não pode deletar esse comentário!" });
-    }
+    if (String(findComment.userId) != String(userId))
+      throw new Error("Você não pode deletar esse comentário!");
 
-    res.status(200).send("Comentário removido com sucesso!");
+    return await removeCommentRepository(idNews, idComment, userId);
   } catch (err) {
-    res.status(500).send({ message: err.message });
+    throw new Error(err.message);
   }
 };

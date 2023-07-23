@@ -58,7 +58,7 @@ const validId = (req, res, next) => {
 const validUser = async (req, res, next) => {
   const id = req.params.id;
 
-  const user = await findByIdService(id);
+  const user = await findByIdRepository(id);
 
   if (!user) {
     return res.status(400).send({ message: "Usuário não encontrado!" });
@@ -96,7 +96,7 @@ const validEmail = (req, res, next) => {
 const checkOwnerPost = async (req, res, next) => {
   const { id } = req.params;
 
-  const news = await findNewsbyIdService(id);
+  const news = await findNewsbyIdRepository(id);
 
   if (!news) {
     return res.status(400).send({ messege: "Nenhuma Notícia encontrada!" });
@@ -108,6 +108,7 @@ const checkOwnerPost = async (req, res, next) => {
       .status(401)
       .send({ messege: "Você não pode deletar essa postagem!" });
   }
+
   req.postId = id;
   next();
 };

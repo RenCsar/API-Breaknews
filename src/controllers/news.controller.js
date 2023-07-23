@@ -64,25 +64,7 @@ const searchByTitle = async (req, res) => {
 
     const news = await searchByTitleService(title);
 
-    if (news.length === 0) {
-      return res
-        .status(400)
-        .send({ messege: "Não existe nenhuma notícia com esse título!" });
-    }
-
-    return res.status(200).send({
-      results: news.map((item) => ({
-        id: item._id,
-        title: item.title,
-        text: item.text,
-        banner: item.banner,
-        likes: item.likes,
-        comments: item.comments,
-        name: item.user.name,
-        userName: item.user.username,
-        img: item.user.img,
-      })),
-    });
+    return res.status(200).send(news);
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
@@ -93,19 +75,7 @@ const byUser = async (req, res) => {
     const id = req.userId;
     const news = await byUserService(id);
 
-    return res.status(200).send({
-      results: news.map((item) => ({
-        id: item._id,
-        title: item.title,
-        text: item.text,
-        banner: item.banner,
-        likes: item.likes,
-        comments: item.comments,
-        name: item.user.name,
-        userName: item.user.username,
-        img: item.user.img,
-      })),
-    });
+    return res.status(200).send(news);
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
@@ -113,16 +83,13 @@ const byUser = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { title, text, banner } = req.body;
-    const id = req.postId;
-
-    if (!title && !text && !banner) {
-      return res.status(400).send({
-        message: "Por favor, preencha pelo menos um requisito do formulário!",
-      });
-    }
-
-    await updateService(id, title, text, banner);
+    const body = {
+      title: req.body.title,
+      text: req.body.text,
+      banner: req.body.banner,
+      postId: req.postId,
+    };
+    await updateService(body);
 
     return res
       .status(200)
@@ -145,18 +112,14 @@ const deleteById = async (req, res) => {
 };
 
 const likeNews = async (req, res) => {
-  const { id } = req.params;
-  const userId = req.userId;
-  const userName = req.userName;
+  const body = {
+    idNews: req.params.id,
+    userId: req.userId,
+    userName: req.userName,
+  };
 
   try {
-    const newsLiked = await likeNewsService(id, userId, userName);
-
-    if (!newsLiked) {
-      await deleteLikeNewsService(id, userId);
-      return res.status(200).send({ messege: "Like removido com sucesso!" });
-    }
-
+    await likeNewsService(body);
     res.status(200).send({ messege: "Like adicionado com sucesso!" });
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -168,10 +131,6 @@ const addComment = async (req, res) => {
     const { id } = req.params;
     const { userId, userName } = req;
     const { comment } = req.body;
-
-    if (!comment) {
-      return res.status(400).send({ messege: "Escreva um comentário!" });
-    }
 
     await addCommentService(id, comment, userId, userName);
     res.status(200).send("Comentário adicionado com sucesso!");
@@ -185,25 +144,7 @@ const removeComment = async (req, res) => {
     const { idNews, idComment } = req.params;
     const userId = req.userId;
 
-    const commentDeleted = await removeCommentService(
-      idNews,
-      idComment,
-      userId
-    );
-
-    const commentFinder = commentDeleted.comments.find(
-      (comment) => comment.idComment === idComment
-    );
-
-    if (!commentFinder) {
-      return res.status(400).send({ messege: "Comentário não existe!" });
-    }
-
-    if (commentFinder.userId !== userId) {
-      return res
-        .status(400)
-        .send({ messege: "Você não pode deletar esse comentário!" });
-    }
+    await removeCommentService(idNews, idComment, userId);
 
     res.status(200).send("Comentário removido com sucesso!");
   } catch (err) {
