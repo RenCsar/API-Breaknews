@@ -187,7 +187,7 @@ export const findBySectionService = async (body) => {
     }
 
     const news = await findBySectionRepository(offset, limit, section);
-    const total = await countNews();
+    const total = news.length;
     const currentUrl = baseUrl;
 
     const next = offset + limit;
