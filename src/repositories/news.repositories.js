@@ -15,6 +15,15 @@ export const searchByTitleRepository = (title) =>
     .sort({ _id: -1 })
     .populate("user");
 
+export const findBySectionRepository = (offset, limit, section) =>
+  News.find({
+    category: { $in: section },
+  })
+    .sort({ _id: -1 })
+    .skip(offset)
+    .limit(limit)
+    .populate("user");
+
 export const byUserRepository = (id) =>
   News.find({ user: id }).sort({ _id: -1 }).populate("user");
 

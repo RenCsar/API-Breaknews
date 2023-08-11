@@ -12,6 +12,7 @@ import {
   addCommentRepository,
   removeCommentRepository,
   findCommentRepository,
+  findBySectionRepository,
 } from "../repositories/news.repositories.js";
 
 export const createService = async (body) => {
@@ -21,11 +22,13 @@ export const createService = async (body) => {
     if (!title || !text || !banner || !subtitle || !category)
       throw new Error("Por favor, preencha todos os requisitos do formulário!");
 
+    const section = category.map((i) => i.toLowerCase());
+
     return await createRepository({
       title,
       subtitle,
       text,
-      category,
+      category: section,
       banner,
       user: userId,
     });
@@ -149,6 +152,64 @@ export const searchByTitleService = async (title) => {
       throw new Error("Não existe nenhuma notícia com esse título!");
 
     return {
+      results: news.map((item) => ({
+        id: item._id,
+        title: item.title,
+        subtitle: item.subtitle,
+        text: item.text,
+        category: item.category,
+        banner: item.banner,
+        likes: item.likes,
+        comments: item.comments,
+        name: item.user.name,
+        userName: item.user.username,
+        img: item.user.img,
+      })),
+    };
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
+
+export const findBySectionService = async (body) => {
+  try {
+    let { limit, offset, baseUrl, section } = body;
+
+    limit = Number(limit);
+    offset = Number(offset);
+
+    if (!limit) {
+      limit = 5;
+    }
+
+    if (!offset) {
+      offset = 0;
+    }
+
+    const news = await findBySectionRepository(offset, limit, section);
+    const total = await countNews();
+    const currentUrl = baseUrl;
+
+    const next = offset + limit;
+    const nextUrl =
+      next < total ? `${currentUrl}?limit=${limit}&offset=${next}` : null;
+
+    const previuos = offset - limit < 0 ? null : offset - limit;
+    const previuosUrl =
+      previuos != null
+        ? `${currentUrl}?limit=${limit}&offset=${previuos}`
+        : null;
+
+    if (news.length === 0)
+      throw new Error("Não existe nenhuma notícia dessa seção!");
+
+    return {
+      nextUrl,
+      previuosUrl,
+      limit,
+      offset,
+      total,
+
       results: news.map((item) => ({
         id: item._id,
         title: item.title,

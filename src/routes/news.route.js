@@ -3,6 +3,7 @@ import {
   create,
   findAll,
   findById,
+  findBySection,
   topNews,
   searchByTitle,
   byUser,
@@ -30,6 +31,7 @@ newsRoute.get("/", findAll);
 newsRoute.get("/top", topNews);
 newsRoute.get("/search", searchByTitle);
 newsRoute.get("/byUser", authMiddleware, byUser);
+newsRoute.get("/posts", findBySection);
 newsRoute.get("/:id", authMiddleware, validId, validNews, findById);
 newsRoute.patch("/:id", authMiddleware, checkOwnerPost, update);
 newsRoute.delete("/:id", authMiddleware, checkOwnerPost, deleteById);

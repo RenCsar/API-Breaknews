@@ -10,6 +10,7 @@ import {
   addCommentService,
   removeCommentService,
   findByIdService,
+  findBySectionService,
 } from "../services/news.service.js";
 
 const create = async (req, res) => {
@@ -52,6 +53,23 @@ const topNews = async (_, res) => {
 const findById = async (req, res) => {
   try {
     const news = await findByIdService(req.news);
+    return res.status(200).send(news);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+const findBySection = async (req, res) => {
+  try {
+    const body = {
+      limit: req.query.limit,
+      offset: req.query.offset,
+      baseUrl: req.baseUrl,
+      section: req.query.section.toLowerCase()
+    };
+
+    const news = await findBySectionService(body);
+
     return res.status(200).send(news);
   } catch (err) {
     res.status(500).send({ message: err.message });
@@ -159,6 +177,7 @@ export {
   findAll,
   topNews,
   findById,
+  findBySection,
   searchByTitle,
   byUser,
   update,
