@@ -13,7 +13,7 @@ const create = async (req, res) => {
     //Create user
     const user = await createService(req.body);
     res.status(201).send({
-      msg: "Usuário cadastrado com sucesso!",
+      message: "Usuário cadastrado com sucesso!",
       user: {
         id: user._id,
         name,
