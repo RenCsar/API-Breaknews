@@ -9,13 +9,21 @@ import {
 export const createService = async (body) => {
   try {
     const { name, username, email, password, img, background } = body;
+    const data = {
+      name,
+      username,
+      email,
+      password,
+      img,
+      background,
+    };
 
     //Validations
     if (!name || !username || !email || !password || !img || !background)
       throw new Error("Por favor, preencha todos os requisitos do formulário!");
 
     //Create user
-    const user = await createRepository(body);
+    const user = await createRepository(data);
     return {
       msg: "Usuário cadastrado com sucesso!",
       user: {

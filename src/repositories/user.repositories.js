@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 
-const createRepository = (body) => User.create(body);
+const createRepository = (data) => User.create(data);
 const findAllRepository = () => User.find();
 const findByIdRepository = (id) => User.findById(id);
 const deleteByIdRepository = (id) => User.findByIdAndDelete(id);

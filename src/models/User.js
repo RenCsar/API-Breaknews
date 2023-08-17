@@ -21,6 +21,11 @@ const UserSchema = Schema({
     require: true,
     select: false, //Não retorna a senha na hora da consulta
   },
+  confirmpassword: {
+    type: String,
+    require: true,
+    select: false, //Não retorna a senha na hora da consulta
+  },
   img: {
     type: String,
     require: true,

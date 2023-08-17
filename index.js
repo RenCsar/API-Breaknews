@@ -1,17 +1,17 @@
 //Imports
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import express, { json } from "express";
 import connectDatabase from "./src/database/db.js";
-import cors from "cors"
+import cors from "cors";
 
 //Routes imports
-import authRoute from './src/routes/auth.route.js';
+import authRoute from "./src/routes/auth.route.js";
 import userRoute from "./src/routes/user.route.js";
-import newsRoute from './src/routes/news.route.js';
+import newsRoute from "./src/routes/news.route.js";
 
 //variables
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 //config
 dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
@@ -20,7 +20,7 @@ app.use(json()); //Para conseguir receber o json no body da requisição
 app.use(cors());
 
 //routes
-app.get("/", ( _, res ) => res.send("Bem-vindo ao App!"));
+app.get("/", (_, res) => res.send("Bem-vindo ao App!"));
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
 app.use("/news", newsRoute);

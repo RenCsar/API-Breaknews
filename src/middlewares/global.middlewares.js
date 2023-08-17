@@ -93,6 +93,14 @@ const validEmail = (req, res, next) => {
   next();
 };
 
+const checkPassword = (req, res, next) => {
+  const { password, confirmpassword } = req.body;
+  if (password !== confirmpassword) {
+    return res.status(422).send({ message: "As senhas devem ser iguais!" });
+  }
+  next();
+};
+
 const checkOwnerPost = async (req, res, next) => {
   const { id } = req.params;
 
@@ -122,4 +130,5 @@ export {
   userExist,
   validNews,
   checkOwnerPost,
+  checkPassword,
 };
