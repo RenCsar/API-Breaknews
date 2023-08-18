@@ -8,6 +8,8 @@ const loginService = async ({ email, password }) => {
   try {
     const user = await loginRepository(email);
 
+    const { name, username, img, background } = user;
+
     if (!user) throw new Error("Usuário ou senha inválidos!");
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
@@ -16,7 +18,17 @@ const loginService = async ({ email, password }) => {
 
     const token = generateToken(user.id);
 
-    return token;
+    return {
+      token,
+      user: {
+        id: user._id,
+        name,
+        username,
+        email: user.email,
+        img,
+        background,
+      },
+    };
   } catch (err) {
     throw new Error(err.message);
   }
