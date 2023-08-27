@@ -8,9 +8,9 @@ const loginService = async ({ email, password }) => {
   try {
     const user = await loginRepository(email);
 
-    const { name, username, img, background } = user;
-
     if (!user) throw new Error("Usuário ou senha inválidos!");
+    
+    const { name, username, img, background } = user;
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
 
